@@ -7,4 +7,5 @@ const companySchema = new mongoose.Schema({
   password: String,
 }, { timestamps: true });
 
-module.exports = mongoose.model("Company", companySchema);
+// ✅ Fix: use the correct variable name
+module.exports = mongoose.models.Company || mongoose.model("Company", companySchema);

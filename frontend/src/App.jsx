@@ -4,13 +4,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Student/Login";
 import Register from "./pages/Student/Register";
-import ForgotPassword from "./pages/Student/ForgotPassword";
-import ResetPassword from "./pages/Student/ResetPassword";
 import StudentDashboard from "./pages/Student/StudentDashboard";
-import Profile from "./pages/Student/Profile";
-import ApplyJob from "./pages/Student/ApplyJob";
-import UploadResume from "./pages/Student/UploadResume";
-import ScheduleInterview from "./pages/Student/ScheduleInterview";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./pages/Student/Student.css";
 import CompanyLogin from "./pages/Company/CompanyLogin";
@@ -34,7 +28,6 @@ function App() {
           <li>
             <Link to="/contact" className="hover:text-blue-600">Contact</Link>
           </li>
-          {/* Login/Register links removed from navbar */}
         </ul>
       </nav>
 
@@ -46,57 +39,27 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+
         <Route path="/company/login" element={<CompanyLogin />} />
         <Route path="/company/register" element={<CompanyRegister />} />
         <Route path="/company/dashboard" element={<CompanyDashboard />} />
 
+        {/* ✅ FIXED LINE */}
+        <Route path="/student/dashboard" element={<StudentDashboard />} />
 
 
-        {/* Protected Student Routes */}
-        <Route
-          path="/student/dashboard"
-          element={
-            <ProtectedRoute>
-              <StudentDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/student/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/student/apply"
-          element={
-            <ProtectedRoute>
-              <ApplyJob />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/student/upload-resume"
-          element={
-            <ProtectedRoute>
-              <UploadResume />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/student/schedule-interview"
-          element={
-            <ProtectedRoute>
-              <ScheduleInterview />
-            </ProtectedRoute>
-          }
-        />
 
-        {/* 404 Page */}
+<Route
+  path="/student/dashboard"
+  element={
+    <ProtectedRoute>
+      <StudentDashboard />
+    </ProtectedRoute>
+  }
+/>
+
+
+        {/* Optional 404 */}
         <Route
           path="*"
           element={

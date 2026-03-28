@@ -1,4 +1,3 @@
-// routes/companyRoutes.js
 const express = require("express");
 const router = express.Router();
 const Company = require("../models/Company");
@@ -6,11 +5,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // Get logged-in company data (Protected)
-const authMiddleware = require("../middleware/authMiddleware"); // Import middleware
+const authMiddleware = require("../middleware/companyMiddleware"); // Use correct middleware
 
-router.get("/company", authMiddleware, async (req, res) => {
+// ✅ New route to check logged-in company
+router.get("/me", authMiddleware, async (req, res) => {
   try {
     // Find company by ID from token
+    const company = await Company.findById(req.company._id).select("-password");
+    res.json({ loggedInCompany: company });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Existing route (kept as-is)
+router.get("/company", authMiddleware, async (req, res) => {
+  try {
     const company = await Company.findById(req.company._id).select("-password");
     res.json(company);
   } catch (err) {
@@ -45,8 +55,8 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, company.password);
     if (!isMatch) return res.status(400).json({ msg: "Wrong Password" });
 
-    // Sign token with the company ID
-    const token = jwt.sign({ id: company._id }, "secretkey", { expiresIn: "1d" });
+    // ✅ Use the same JWT secret from env
+    const token = jwt.sign({ id: company._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.json({ token, company });
   } catch (err) {

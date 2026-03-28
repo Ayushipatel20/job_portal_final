@@ -1,16 +1,21 @@
-// models/Application.js
 const mongoose = require("mongoose");
 
 const ApplicationSchema = new mongoose.Schema({
   // --- NEW FIELD ---
-  // This links the application to a specific company
+  // This links the application to a specific student
+  student: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Student", // ✅ Must match your student model
+    required: true 
+  },
+
   company: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Company", 
     required: true 
   },
   // -----------------
-  
+
   name: { type: String, required: true },
   email: { type: String, required: true },
   
@@ -31,4 +36,5 @@ const ApplicationSchema = new mongoose.Schema({
   resume: { type: String }
 });
 
-module.exports = mongoose.model("Application", ApplicationSchema);
+// Avoid multiple model compilation errors in watch mode
+module.exports = mongoose.models.Application || mongoose.model("Application", ApplicationSchema);

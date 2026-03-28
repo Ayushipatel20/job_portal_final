@@ -8,13 +8,20 @@ const authMiddleware = require("../middleware/authMiddleware");
 router.get("/", authMiddleware, async (req, res) => {
   const { status } = req.query;
   
-  // Base filter is always the company ID
   const filter = { company: req.company._id };
   if (status && status !== "All") filter.status = status;
   
   try {
-    const apps = await Application.find(filter).sort({ appliedDate: -1 });
-    res.json(apps);
+    const apps = await Application.find(filter)
+      .populate("company", "name") // populate company
+      .sort({ appliedDate: -1 });
+
+    const formattedApps = apps.map((app) => ({
+      ...app._doc,
+      companyName: app.company ? app.company.name : "N/A", // fix N/A
+    }));
+
+    res.json(formattedApps);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -42,7 +49,7 @@ router.patch("/:id", authMiddleware, async (req, res) => {
     const updatedApp = await Application.findOneAndUpdate(
       { _id: req.params.id, company: req.company._id }, 
       { status }, 
-      { new: true }
+{ returnDocument: "after" }
     );
     if (!updatedApp) return res.status(404).json({ msg: "Not found" });
     res.json(updatedApp);

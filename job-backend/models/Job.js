@@ -20,4 +20,4 @@ const JobSchema = new mongoose.Schema({
   status: { type: String, enum: ["Open", "Closed"], default: "Open" }
 });
 
-module.exports = mongoose.model("Job", JobSchema);
+module.exports = mongoose.models.Job || mongoose.model("Job", JobSchema);

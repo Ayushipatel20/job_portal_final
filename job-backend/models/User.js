@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  resetCode: { type: String }, // For forgot password
+const studentSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+  university: String,
+  gpa: String,
+  resume: String,
+
+  // ✅ ADD THESE ONLY
+  phone: String,
+  skills: String,
+  bio: String,
+  profilePic: String
 });
 
-module.exports = mongoose.model("User", userSchema);
+// Fix OverwriteModelError
+module.exports =
+  mongoose.models.Student ||
+  mongoose.model("Student", studentSchema);
